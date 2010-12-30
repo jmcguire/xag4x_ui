@@ -88,6 +88,7 @@ table#board td.selected {
 .icon {
     width: 75px;
     height: 75px;
+    background-repeat: no-repeat;
 }
 .army    { background-image: url("sketch-icons/tank.png") }
 .city    { background-image: url("sketch-icons/city.png") }
@@ -97,7 +98,17 @@ table#board td.selected {
     width: 26px;
     height: 26px;
     cursor: hand; cursor: pointer;
+    background-repeat: no-repeat;
 }
 .mini-army    { background-image: url("sketch-icons/tank-mini.png") }
 .mini-city    { background-image: url("sketch-icons/city-mini.png") }
 .mini-settler { background-image: url("sketch-icons/people-mini.png") }
+
+.arrow {
+    cursor: hand; cursor: pointer;
+    background-repeat: no-repeat;
+}
+.arrow_up    { background-image: url("arrows/arrow_up.png");    width: 52px; height: 39px; }
+.arrow_down  { background-image: url("arrows/arrow_down.png");  width: 52px; height: 39px; }
+.arrow_left  { background-image: url("arrows/arrow_left.png");  width: 39px; height: 52px; }
+.arrow_right { background-image: url("arrows/arrow_right.png"); width: 39px; height: 52px; }

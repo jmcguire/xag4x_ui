@@ -103,7 +103,6 @@ $.fn.xinc_board = function(options, placements) {
             for (j=0; j<width; j++) {
                 var new_cell = $("<td>")
                 new_cell.attr("id", "cell_" + i + "-" + j);
-                /* new_cell.html(opts.show_coords ? i+","+j : "&nbsp;"); */
                 new_cell.html('<span class="coords">'+i+','+j+'</span>');
                 new_row.append(new_cell);
             }
@@ -111,7 +110,7 @@ $.fn.xinc_board = function(options, placements) {
         }
     }
 
-    /* general function to place something on a tile */
+    /* general function to place a unit on a tile */
     function draw_thing(cell, classes) {
         cell.removeClass();
         cell.addClass("icon " + classes)
@@ -139,12 +138,27 @@ $.fn.xinc_board = function(options, placements) {
         /* add something like $(this).data("action", "MOVE UP"), then we later 
             $("unit").each( function(u){ u.data("action") }); */
 
+        var img_up    = $('<img src="images/transparent.png" class="arrow_up"    alt="move up"    title="move up" \>');
+        var img_down  = $('<img src="images/transparent.png" class="arrow_down"  alt="move down"  title="move down" \>');
+        var img_left  = $('<img src="images/transparent.png" class="arrow_left"  alt="move left"  title="move left" \>');
+        var img_right = $('<img src="images/transparent.png" class="arrow_right" alt="move right" title="move right" \>');
+
         var select_fn = function(){
-            ;
+            cell.append(img_up);
+            cell.append(img_down);
+            cell.append(img_left);
+            cell.append(img_right);
+            place_image_outside_top(cell, img_up);
+            place_image_outside_bottom(cell, img_down);
+            place_image_outside_left(cell, img_left);
+            place_image_outside_right(cell, img_right);
         }
 
         var deselect_fn = function(){
-            ;
+            img_up.remove();
+            img_down.remove();
+            img_left.remove();
+            img_right.remove();
         }
 
         return { select: select_fn, deselect: deselect_fn };
@@ -215,6 +229,35 @@ $.fn.xinc_board = function(options, placements) {
         var left = cell_offset.left + opts.cell_size / 2 - img.width() / 2;
         img.offset({ top: top, left: left });
     }
+    /* these next four placement fns are for arrows */
+    function place_image_outside_top(cell, img) {
+        var cell_offset = cell.offset();
+        var top = cell_offset.top - img.height() / 2 - opts.arrow_nudge;
+        var left = cell_offset.left + opts.cell_size / 2 - img.width() / 2;
+        img.css('position', 'absolute');
+        img.offset({ top: top, left: left });
+    }
+    function place_image_outside_bottom(cell, img) {
+        var cell_offset = cell.offset();
+        var top = cell_offset.top + opts.cell_size - img.height() / 2 + opts.arrow_nudge;
+        var left = cell_offset.left + opts.cell_size / 2 - img.width() / 2;
+        img.css('position', 'absolute');
+        img.offset({ top: top, left: left });
+    }
+    function place_image_outside_left(cell, img) {
+        var cell_offset = cell.offset();
+        var top = cell_offset.top + opts.cell_size / 2 - img.height() / 2;
+        var left = cell_offset.left - img.width() / 2 - opts.arrow_nudge;
+        img.css('position', 'absolute');
+        img.offset({ top: top, left: left });
+    }
+    function place_image_outside_right(cell, img) {
+        var cell_offset = cell.offset();
+        var top = cell_offset.top + opts.cell_size / 2 - img.height() / 2;
+        var left = cell_offset.left + opts.cell_size - img.width() / 2 + opts.arrow_nudge;
+        img.css('position', 'absolute');
+        img.offset({ top: top, left: left });
+    }
 };
 
 $.fn.xinc_board.opts_defaults = {
@@ -223,6 +266,7 @@ $.fn.xinc_board.opts_defaults = {
     cell_size: 75, /* the height and width (in pixels) of the cell. right now this is integrated
                       tightly with the images and CSS, so changing just this won't affect much */
     min_icon_margin: 5, /* the margin between the cell border and any mini icons */
+    arrow_nudge: 5, /* how far off center we nudge the arrows action icons */
     show_coords: false,
     this_player: "" /* the id of who is playing */
 };
