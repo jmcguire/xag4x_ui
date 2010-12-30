@@ -78,11 +78,6 @@ table#board td.selected {
 
 /* unit icons */
 
-.icon {
-    width: 100px;
-    height: 100px;
-}
-
 .blue   { background-color: #33e }
 .red    { background-color: #a33 }
 .purple { background-color: purple }
@@ -90,11 +85,19 @@ table#board td.selected {
 .green  { background-color: #090 }
 .orange { background-color: #f60 }
 
+.icon {
+    width: 75px;
+    height: 75px;
+}
 .army    { background-image: url("sketch-icons/tank.png") }
 .city    { background-image: url("sketch-icons/city.png") }
 .settler { background-image: url("sketch-icons/people.png") }
 
-.mini-icon    { width: 26px; height: 26px; cursor: hand; cursor: pointer; }
+.mini-icon {
+    width: 26px;
+    height: 26px;
+    cursor: hand; cursor: pointer;
+}
 .mini-army    { background-image: url("sketch-icons/tank-mini.png") }
 .mini-city    { background-image: url("sketch-icons/city-mini.png") }
 .mini-settler { background-image: url("sketch-icons/people-mini.png") }
