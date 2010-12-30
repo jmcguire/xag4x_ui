@@ -22,6 +22,7 @@ table#board td {
     min-width: 75px;
     height: 75px;
     text-align: center;
+    overflow: hidden;
 }
 
 table#board td.selected {
@@ -37,6 +38,17 @@ table#board td.selected {
     background-image: url("images/whiten_50.png");
     padding: 2px;
     color: black;
+    position: relative;
+    top: 10px;
+}
+
+.action {
+    color: white;
+    text-shadow: #000 1px 1px 1px;
+    overflow: hidden;
+    font-size: 10px;
+    position: relative;
+    top: -33px;
 }
 
 /* footer elements */
@@ -99,6 +111,7 @@ table#board td.selected {
     height: 26px;
     cursor: hand; cursor: pointer;
     background-repeat: no-repeat;
+    position: absolute;
 }
 .mini-army    { background-image: url("sketch-icons/tank-mini.png") }
 .mini-city    { background-image: url("sketch-icons/city-mini.png") }
@@ -107,6 +120,7 @@ table#board td.selected {
 .arrow {
     cursor: hand; cursor: pointer;
     background-repeat: no-repeat;
+    position: absolute;
 }
 .arrow_up    { background-image: url("arrows/arrow_up.png");    width: 52px; height: 39px; }
 .arrow_down  { background-image: url("arrows/arrow_down.png");  width: 52px; height: 39px; }

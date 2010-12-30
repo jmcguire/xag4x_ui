@@ -29,8 +29,8 @@ $.fn.xinc_board = function(options, placements) {
     }
 
     /*
-     *
      * Setup each unit, for this player and otherwise.
+     *
      *   piece          - object, from the init, looks like { at: [3,2], status: "" }
      *   player_color   - string, matches up to a color defined in CSS
      *   action_allowed - boolean
@@ -38,21 +38,18 @@ $.fn.xinc_board = function(options, placements) {
      *   action_fns     - array of functions, of the get_*_actions from below
      */
      
-    /* some shortcuts to the setup_unit function */
-    function setup_army (piece, player_color, action_allowed) {
-        setup_unit(piece, player.color, action_allowed, "army", [get_select_actions, get_move_actions] );
-    }
-    function setup_settler (piece, player_color, action_allowed) {
-        setup_unit(piece, player.color, action_allowed, "settler", [get_select_actions, get_move_actions, get_settle_actions] );
-    }
-    function setup_city (piece, player_color, action_allowed) {
-        setup_unit(piece, player.color, action_allowed, "city", [get_select_actions, get_build_actions] );
-    }
-    
     function setup_unit (piece, player_color, action_allowed, unit_type, action_fns) {
         var i = piece.at[0];
         var j = piece.at[1];
 
+        /* every selectable unit (table cell) has three pieces of data to be aware of:
+         *
+         *  select: actions that are taken when the unit it brought into focus. normally displaying
+         *      allowed action icons.
+         *  deselect: actions that are taken when the unit it no longer in focus. normally getting
+         *      rid of action icons, and showing the currently selected action
+         *  action: the currently selected action. it may be empty.
+         */
         var cell = $("#cell_" + i + "-" + j);
         draw_thing(cell, unit_type + ' ' + player_color);
 
@@ -70,14 +67,18 @@ $.fn.xinc_board = function(options, placements) {
                and another if it is deselected, which cleans up. */
             /*alert($.dump(select_fns));*/
             cell.data('select', function(){
+                cell.data('action')();
                 for (i in select_fns) {
                     select_fns[i]();
                 }
+                cell.children('.action').remove();
             });
             cell.data('deselect', function(){
                 for (i in deselect_fns) {
                     deselect_fns[i]();
                 }
+                /* if we have a selected action, alert to it */
+                cell.append( $('<p>').addClass('action').text(cell.data('action')) );
             });
             
             cell.click(function(){
@@ -91,6 +92,17 @@ $.fn.xinc_board = function(options, placements) {
         }
     }
 
+    /* some shortcuts to the setup_unit function */
+    function setup_army (piece, player_color, action_allowed) {
+        setup_unit(piece, player.color, action_allowed, "army", [get_select_actions, get_move_actions] );
+    }
+    function setup_settler (piece, player_color, action_allowed) {
+        setup_unit(piece, player.color, action_allowed, "settler", [get_select_actions, get_move_actions, get_settle_actions] );
+    }
+    function setup_city (piece, player_color, action_allowed) {
+        setup_unit(piece, player.color, action_allowed, "city", [get_select_actions, get_build_actions] );
+    }
+    
     /* 
      * Drawing stuff on the screen
      *
@@ -135,35 +147,41 @@ $.fn.xinc_board = function(options, placements) {
 
     function get_move_actions(i,j) {
         var cell = $("#cell_" + i + "-" + j);
-        /* place arrow images, taking walls into account */
         /* give each arrow image a click function, the chooses it, and deselects the tile */
         /* add something like $(this).data("action", "MOVE UP"), then we later 
             $("unit").each( function(u){ u.data("action") }); */
 
-        var img_up    = $('<img src="images/transparent.png" class="arrow_up"    alt="move up"    title="move up" \>');
-        var img_down  = $('<img src="images/transparent.png" class="arrow_down"  alt="move down"  title="move down" \>');
-        var img_left  = $('<img src="images/transparent.png" class="arrow_left"  alt="move left"  title="move left" \>');
-        var img_right = $('<img src="images/transparent.png" class="arrow_right" alt="move right" title="move right" \>');
+        var img_up    = $('<img src="images/transparent.png" class="arrow arrow_up"    alt="move up"    title="move up" \>');
+        var img_down  = $('<img src="images/transparent.png" class="arrow arrow_down"  alt="move down"  title="move down" \>');
+        var img_left  = $('<img src="images/transparent.png" class="arrow arrow_left"  alt="move left"  title="move left" \>');
+        var img_right = $('<img src="images/transparent.png" class="arrow arrow_right" alt="move right" title="move right" \>');
+        
 
         var select_fn = function(){
+            /* each of these IF statements checks if we're at the board's edge */
+
             if (i > 0) {
                 cell.append(img_up);
                 place_image_outside_top(cell, img_up);
+                img_up.click(function(){ cell.data('action', 'move_up'); });
             }
             
             if (i < opts.height - 1) {
                 cell.append(img_down);
                 place_image_outside_bottom(cell, img_down);
+                img_down.click(function(){ cell.data('action', 'move_down'); });
             }
             
             if (j > 0) {
                 cell.append(img_left);
                 place_image_outside_left(cell, img_left);
+                img_left.click(function(){ cell.data('action', 'move_left'); });
             }
             
             if (j < opts.width - 1) {
                 cell.append(img_right);
                 place_image_outside_right(cell, img_right);
+                img_right.click(function(){ cell.data('action', 'move_right'); });
             }
         }
 
@@ -185,6 +203,7 @@ $.fn.xinc_board = function(options, placements) {
         var select_fn = function(){
             cell.append(img_city);
             place_image_bottom_center(cell, img_city);
+            img_city.click(function(){ cell.data('action', 'build_city'); });
         }
 
         var deselect_fn = function(){
@@ -205,6 +224,8 @@ $.fn.xinc_board = function(options, placements) {
             cell.append(img_settler);
             place_image_bottom_right(cell, img_settler);
             place_image_bottom_left(cell, img_army);
+            img_settler.click(function(){ cell.data('action', 'build_settler'); });
+            img_army.click(function(){ cell.data('action', 'build_army'); });
         }
 
         var deselect_fn = function(){
@@ -249,28 +270,24 @@ $.fn.xinc_board = function(options, placements) {
         var cell_offset = cell.offset();
         var top = cell_offset.top - img.height() / 2 - opts.arrow_nudge;
         var left = cell_offset.left + opts.cell_size / 2 - img.width() / 2;
-        img.css('position', 'absolute');
         img.offset({ top: top, left: left });
     }
     function place_image_outside_bottom(cell, img) {
         var cell_offset = cell.offset();
         var top = cell_offset.top + opts.cell_size - img.height() / 2 + opts.arrow_nudge;
         var left = cell_offset.left + opts.cell_size / 2 - img.width() / 2;
-        img.css('position', 'absolute');
         img.offset({ top: top, left: left });
     }
     function place_image_outside_left(cell, img) {
         var cell_offset = cell.offset();
         var top = cell_offset.top + opts.cell_size / 2 - img.height() / 2;
         var left = cell_offset.left - img.width() / 2 - opts.arrow_nudge;
-        img.css('position', 'absolute');
         img.offset({ top: top, left: left });
     }
     function place_image_outside_right(cell, img) {
         var cell_offset = cell.offset();
         var top = cell_offset.top + opts.cell_size / 2 - img.height() / 2;
         var left = cell_offset.left + opts.cell_size - img.width() / 2 + opts.arrow_nudge;
-        img.css('position', 'absolute');
         img.offset({ top: top, left: left });
     }
 };
