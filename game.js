@@ -42,18 +42,19 @@ $.fn.xinc_board = function(options, placements) {
         var i = piece.at[0];
         var j = piece.at[1];
 
-        /* every selectable unit (table cell) has three pieces of data to be aware of:
-         *
-         *  select: actions that are taken when the unit it brought into focus. normally displaying
-         *      allowed action icons.
-         *  deselect: actions that are taken when the unit it no longer in focus. normally getting
-         *      rid of action icons, and showing the currently selected action
-         *  action: the currently selected action. it may be empty.
-         */
         var cell = $("#cell_" + i + "-" + j);
         draw_thing(cell, unit_type + ' ' + player_color);
 
         if (action_allowed) {
+            /* every selectable unit (table cell) has three pieces of data to be aware of:
+             *
+             *  select: actions that are taken when the unit it brought into focus. normally displaying
+             *      allowed action icons.
+             *  deselect: actions that are taken when the unit it no longer in focus. normally getting
+             *      rid of action icons, and showing the currently selected action
+             *  action: the currently selected action. it may be empty.
+             */
+             
             var select_fns = [];
             var deselect_fns = [];
             
@@ -65,9 +66,8 @@ $.fn.xinc_board = function(options, placements) {
             
             /* every selectable cell gets two functions attached to it, one if it is selected,
                and another if it is deselected, which cleans up. */
-            /*alert($.dump(select_fns));*/
             cell.data('select', function(){
-                cell.data('action')();
+                cell.data('action','');
                 for (i in select_fns) {
                     select_fns[i]();
                 }
