@@ -11,7 +11,7 @@ $(document).ready(function() {
                 { at: [3,2], status: "" }
             ],
             settlers: [
-                { at: [1,3], status: "" }
+                { at: [0,3], status: "" }
             ],
             cities: [
                 { at: [1,1], status: "" }

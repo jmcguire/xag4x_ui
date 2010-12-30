@@ -60,8 +60,8 @@ $.fn.xinc_board = function(options, placements) {
             var select_fns = [];
             var deselect_fns = [];
             
-            for (i in action_fns) {
-                var actions = action_fns[i](cell);
+            for (index in action_fns) {
+                var actions = action_fns[index](i,j);
                 select_fns.push(actions.select);
                 deselect_fns.push(actions.deselect);
             }
@@ -122,7 +122,8 @@ $.fn.xinc_board = function(options, placements) {
      */
 
     /* make the unit "glow", or some other look-at-me effect */
-    function get_select_actions(cell) {
+    function get_select_actions(i,j) {
+        var cell = $("#cell_" + i + "-" + j);
         var select_fn = function(){
             cell.addClass("selected");
         }
@@ -132,7 +133,8 @@ $.fn.xinc_board = function(options, placements) {
         return { select: select_fn, deselect: deselect_fn };
     }
 
-    function get_move_actions(cell) {
+    function get_move_actions(i,j) {
+        var cell = $("#cell_" + i + "-" + j);
         /* place arrow images, taking walls into account */
         /* give each arrow image a click function, the chooses it, and deselects the tile */
         /* add something like $(this).data("action", "MOVE UP"), then we later 
@@ -144,14 +146,25 @@ $.fn.xinc_board = function(options, placements) {
         var img_right = $('<img src="images/transparent.png" class="arrow_right" alt="move right" title="move right" \>');
 
         var select_fn = function(){
-            cell.append(img_up);
-            cell.append(img_down);
-            cell.append(img_left);
-            cell.append(img_right);
-            place_image_outside_top(cell, img_up);
-            place_image_outside_bottom(cell, img_down);
-            place_image_outside_left(cell, img_left);
-            place_image_outside_right(cell, img_right);
+            if (i > 0) {
+                cell.append(img_up);
+                place_image_outside_top(cell, img_up);
+            }
+            
+            if (i < opts.height - 1) {
+                cell.append(img_down);
+                place_image_outside_bottom(cell, img_down);
+            }
+            
+            if (j > 0) {
+                cell.append(img_left);
+                place_image_outside_left(cell, img_left);
+            }
+            
+            if (j < opts.width - 1) {
+                cell.append(img_right);
+                place_image_outside_right(cell, img_right);
+            }
         }
 
         var deselect_fn = function(){
@@ -165,7 +178,8 @@ $.fn.xinc_board = function(options, placements) {
     }
 
     /* settle actions let a unit create a city */
-    function get_settle_actions(cell) {
+    function get_settle_actions(i,j) {
+        var cell = $("#cell_" + i + "-" + j);
         var img_city = $('<img src="images/transparent.png" class="mini-icon mini-city" alt="build a city" title="build a city" \>');
 
         var select_fn = function(){
@@ -181,7 +195,8 @@ $.fn.xinc_board = function(options, placements) {
     }
 
     /* build actions let a unit create an army or a settler */
-    function get_build_actions(cell) {
+    function get_build_actions(i,j) {
+        var cell = $("#cell_" + i + "-" + j);
         var img_settler = $('<img src="images/transparent.png" class="mini-icon mini-settler" alt="build a settler" title="build a settler" \>');
         var img_army = $('<img src="images/transparent.png" class="mini-icon mini-army" alt="build an army" title="build an army" \>');
 
@@ -261,6 +276,8 @@ $.fn.xinc_board = function(options, placements) {
 };
 
 $.fn.xinc_board.opts_defaults = {
+    /* keep in mind: width and height are 1-indexed, but in the init file, the "at"
+       variable is 0-indexed */
     height: 10,
     width: 10,
     cell_size: 75, /* the height and width (in pixels) of the cell. right now this is integrated
