@@ -1,7 +1,4 @@
-implement movement arrows
-
 add action selection to action icons (arrows and mini-icons)
-    - should take into account the ends of the board
     - red icons for attacks, orange icons for possible attacks?
 
 action icons should have colored rollover
