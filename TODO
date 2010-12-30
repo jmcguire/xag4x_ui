@@ -22,6 +22,28 @@ stacked tiles
           choosen action visible, if one has been choosen. during the fan, darken/gray-out the
           rest of the board?
 
+actions that happen over multiple turns
+    - cities take x number of turns to be built
+        * in icons: a seperate icon for each stage of the building? would be annoying to update
+          when that mechanic changes, like from 2 turns to 3 turns. a grayed out city with a
+          timer number on it? maybe just one seperate icon for "city under construction" with
+          a timer number?
+        * in code: cities under construction are essentially non-actionable units. separate
+          them completely from regular cities, they're a different unit.
+    - armies may take time to build
+        * until the army is built, the city can't select any new actions. but a city can
+          interrupt its action and choose to build something new, in which case progress is
+          lost.
+    - both of these situations may be variations of the same problem: building something over
+      multiple turns, and whether it can be interrupted or not.
+        * a city under construction could be represented as a settler with a "building" sign.
+        * or, a city under construction could be represented as a city with an "under
+           construction" sign.
+        * same thing for cities building other units.
+        * if the building is interuptible, then we can click on unit, select the "X" icon,
+          which turns it back into the regular unit. if the user wants to "uninterrupt" it,
+          they can choose that building icon, and it'll go back to "under construction."
+
 game selector
     - a wholly seperate page
     - presents a list of games going on, with who's playing in each
