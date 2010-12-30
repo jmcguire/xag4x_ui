@@ -1,0 +1,37 @@
+<html>
+<head>
+    <title>xinc - gameplay</title>
+    <link type="text/css" rel="stylesheet" href="yahoo-reset-min.css" />
+    <link type="text/css" rel="stylesheet" href="game.css" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="jquery.dump.js"></script>
+    <script type="text/javascript" src="game.js"></script>
+    <script type="text/javascript" src="init.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    /*
+    var cell = $("#cell_3-2");
+    cell.addClass("selected");
+    /**/
+});
+</script>
+
+<table id="board"></table>
+
+<div id="footer">
+    <p class="info">
+        <span class="turn">Turn:</span> <span class="turn-num">15</span>
+        - <a onclick="$('.coords').css('display') == 'none' ? $('.coords').show() : $('.coords').hide();">(toogle coords)</a>
+    </p>
+    <p class="submit">
+        <a>Submit Turn</a>
+    </p>
+    <br />
+</div>
+
+</body>
+</html>

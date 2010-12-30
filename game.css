@@ -1,0 +1,100 @@
+* { margin: 0; padding: 0; font-family: Helvetica,Arial,sans-serif; }
+a { text-decoration: underline; cursor: pointer; cursor: hand; }
+
+body {
+    background-color: black;
+}
+
+/* game board elements */
+
+table#board {
+    background: #6c6 url("downloads/grass2.jpg") repeat;
+    border: 1px solid black;
+}
+
+table#board tr {
+    ;
+}
+
+table#board td {
+    border: 1px solid #222;
+    width: 75px;
+    min-width: 75px;
+    height: 75px;
+    text-align: center;
+}
+
+table#board td.selected {
+    border: 1px solid #ffa500;
+    border-size: 1px 1px 1px 1px;
+    -webkit-box-shadow:0 0 15px #ffa500; 
+    -moz-box-shadow: 0 0 15px #ffa500; 
+    box-shadow:0 0 15px #ffa500;
+}
+
+.coords {
+    font-family: monospace;
+    background-image: url("images/whiten_50.png");
+    padding: 2px;
+    color: black;
+}
+
+/* footer elements */
+
+#footer {
+    max-width: 100%;
+    padding: 20px;
+    background-color: #222;
+    color: #fff;
+}
+
+#footer .info  {
+    display: block;
+    width: 300px;
+    float: left;
+}
+
+#footer .info .turn {
+    color: #f77;
+    font-weight: bold;
+}
+
+#footer .info .turn-num {
+    font-size: 1.1em;
+    color: #fff;
+    font-weight: bold;
+}
+
+#footer .submit {
+    display: block;
+    float: right;
+    text-align: right;
+    font-weight: bold;
+}
+
+#footer a {
+    color: #aae;
+}
+
+/* unit icons */
+
+.icon {
+    width: 100px;
+    height: 100px;
+}
+
+.blue   { background-color: #33e }
+.red    { background-color: #a33 }
+.purple { background-color: purple }
+.gold   { background-color: orange }
+.green  { background-color: #090 }
+.orange { background-color: #f60 }
+
+.army    { background-image: url("sketch-icons/tank.png") }
+.city    { background-image: url("sketch-icons/city.png") }
+.settler { background-image: url("sketch-icons/people.png") }
+
+.mini-icon    { width: 26px; height: 26px; cursor: hand; cursor: pointer; }
+.mini-army    { background-image: url("sketch-icons/tank-mini.png") }
+.mini-city    { background-image: url("sketch-icons/city-mini.png") }
+.mini-settler { background-image: url("sketch-icons/people-mini.png") }

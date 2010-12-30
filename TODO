@@ -1,0 +1,41 @@
+implement movement arrows
+
+add action selection to action icons (arrows and mini-icons)
+    - should take into account the ends of the board
+    - red icons for attacks, orange icons for possible attacks?
+
+action icons should have colored rollover
+
+unselected tiles should show their currently selected action, maybe an icon grayed out?
+
+implement footer
+    - turn count
+    - submit turn - polls all units for current plater and creates a player turn file
+
+
+[ wholly unimplemented yet necessary features ]
+
+
+turn file format, either:
+    - conversion script to convert a turn file into our json format
+    - rejigger the initialization to use a regular turn file
+
+stacked tiles
+    - icons to represent a stack?
+        * different icons for different types of stacks, like one icon for all of one type and
+          and one for multiple types?
+        * one unit is in front, but has a "stack" border, like a deck of cards, to indicate
+          it's part of a stack
+    - how do we see all the units in a stack?
+        * click on the stack, which fans out all the units available, then we click the one
+          we want, which brings it to the forefront. each unit in the fan should have its
+          choosen action visible, if one has been choosen. during the fan, darken/gray-out the
+          rest of the board?
+
+game selector
+    - a wholly seperate page
+    - presents a list of games going on, with who's playing in each
+    - lets us log into the game we want, as the user we want
+    - obviously, some kind of authentication. nothing big on our end, since we're in unsafe
+      client-side-land anyways.
+
