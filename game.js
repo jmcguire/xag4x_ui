@@ -7,6 +7,7 @@ $.fn.xinc_board = function(options, placements) {
     var selected_cell = new Object();
 
     create_board($(this), opts.height, opts.width);
+    setup_submit_link($(opts.submit_link));
 
     opts.show_coords ? $(".coords").show() : $(".coords").hide();
 
@@ -15,15 +16,15 @@ $.fn.xinc_board = function(options, placements) {
         var player = placements[player_i];
         var action_allowed = player_i == opts.this_player ? 1 : 0;
         
-        $.each(player.armies, function(player_id, piece) {
+        $.each(player.armies, function(index, piece) {
             setup_army(piece, player.color, action_allowed);
         });
         
-        $.each(player.settlers, function(player_id, piece) {
+        $.each(player.settlers, function(index, piece) {
             setup_settler(piece, player.color, action_allowed);
         });
         
-        $.each(player.cities, function(player_id, piece) {
+        $.each(player.cities, function(index, piece) {
             setup_city(piece, player.color, action_allowed);
         });
     }
@@ -44,8 +45,10 @@ $.fn.xinc_board = function(options, placements) {
 
         var cell = $("#cell_" + i + "-" + j);
         draw_thing(cell, unit_type + ' ' + player_color);
+        cell.data('unit_id', piece.unit_id);
 
         if (action_allowed) {
+            cell.addClass('action_cell');
             /* every selectable unit (table cell) has three pieces of data to be aware of:
              *
              *  select: actions that are taken when the unit it brought into focus. normally displaying
@@ -163,25 +166,25 @@ $.fn.xinc_board = function(options, placements) {
             if (i > 0) {
                 cell.append(img_up);
                 place_image_outside_top(cell, img_up);
-                img_up.click(function(){ cell.data('action', 'move_up'); });
+                img_up.click(function(){ cell.data('action', 'MOVE N'); });
             }
             
             if (i < opts.height - 1) {
                 cell.append(img_down);
                 place_image_outside_bottom(cell, img_down);
-                img_down.click(function(){ cell.data('action', 'move_down'); });
+                img_down.click(function(){ cell.data('action', 'MOVE S'); });
             }
             
             if (j > 0) {
                 cell.append(img_left);
                 place_image_outside_left(cell, img_left);
-                img_left.click(function(){ cell.data('action', 'move_left'); });
+                img_left.click(function(){ cell.data('action', 'MOVE W'); });
             }
             
             if (j < opts.width - 1) {
                 cell.append(img_right);
                 place_image_outside_right(cell, img_right);
-                img_right.click(function(){ cell.data('action', 'move_right'); });
+                img_right.click(function(){ cell.data('action', 'MOVE E'); });
             }
         }
 
@@ -203,7 +206,7 @@ $.fn.xinc_board = function(options, placements) {
         var select_fn = function(){
             cell.append(img_city);
             place_image_bottom_center(cell, img_city);
-            img_city.click(function(){ cell.data('action', 'build_city'); });
+            img_city.click(function(){ cell.data('action', 'BUILD CITY'); });
         }
 
         var deselect_fn = function(){
@@ -224,8 +227,8 @@ $.fn.xinc_board = function(options, placements) {
             cell.append(img_settler);
             place_image_bottom_right(cell, img_settler);
             place_image_bottom_left(cell, img_army);
-            img_settler.click(function(){ cell.data('action', 'build_settler'); });
-            img_army.click(function(){ cell.data('action', 'build_army'); });
+            img_settler.click(function(){ cell.data('action', 'BUILD SETTLER'); });
+            img_army.click(function(){ cell.data('action', 'BUILD ARMY'); });
         }
 
         var deselect_fn = function(){
@@ -290,6 +293,33 @@ $.fn.xinc_board = function(options, placements) {
         var left = cell_offset.left + opts.cell_size - img.width() / 2 + opts.arrow_nudge;
         img.offset({ top: top, left: left });
     }
+    
+    /*
+     * Other
+     *
+     */
+
+    /* setup the "submit turn" button */
+    function setup_submit_link(submit_element) {
+        submit_element.click(function(){
+            /* poll all cells for their current action*/
+            var move_file = '';
+            $('.action_cell').each(function(){
+                var action = $(this).data('action');
+                var player_id = opts.this_player;
+                var unit_id = $(this).data('unit_id');
+                
+                var type = 'UNKNOWN';
+                if ( $(this).hasClass('army') ) type = 'ARMY';
+                if ( $(this).hasClass('city') ) type = 'CITY';
+                if ( $(this).hasClass('settler') ) type = 'SETTLER';
+                
+                move_file = move_file + type + ' ' + unit_id + ' ' + player_id + ' ' + action + "\n";
+            });
+            alert(move_file);
+        });
+    }
+
 };
 
 $.fn.xinc_board.opts_defaults = {
@@ -302,7 +332,8 @@ $.fn.xinc_board.opts_defaults = {
     min_icon_margin: 5, /* the margin between the cell border and any mini icons */
     arrow_nudge: 5, /* how far off center we nudge the arrows action icons */
     show_coords: false,
-    this_player: "" /* the id of who is playing */
+    this_player: '', /* the user id of who is playing */
+    submit_link: '' /* the submit link id. (the selector for the element that will get pressed to submit a turn.) */
 };
 
 })(jQuery);

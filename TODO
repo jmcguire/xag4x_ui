@@ -1,6 +1,5 @@
 implement footer
     - turn count
-    - submit turn - polls all units for current plater and creates a player turn file
 
 
 [ wholly unimplemented yet necessary features ]
